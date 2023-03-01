@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Registration Form</title>
+        <style>
+            body{
+                padding: 0;
+                margin: 0;
+                font-family: sans-serif;
+                background-color: deepskyblue;
+                /* background-image: url('./bg.jpg');
+                background-repeat: no-repeat;
+                background-size: 100%; */
+            }
+            .login-form{
+                padding: 20px;
+                background-color: darkcyan;
+                width: 350px;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                position: absolute;
+                color: #fff;
+                border-radius: 25px;
+            }
+            .login-form h1 {
+                font-size: 40px;
+                text-align: center;
+                text-transform: uppercase;
+                margin: 20px 0;
+            }
+            .login-form input {
+                font-size: 16px;
+                padding: 15px 10px;
+                border: 0;
+                outline: none;
+                border-radius: 25px;
+                margin: 10px;
+            }
+            .login-form button{
+                font-size: 18px;
+                font-weight: bold;
+                margin: 20px 0;
+                padding: 10px 15px;
+                width: 50%;
+                border-radius: 25px;
+                border: 0;
+            }
+            .showData{
+                width: 600px;
+                padding: 10px;
+                height: auto;
+                border-radius: 20px;
+                background-color: cornflowerblue;
+                position: relative;
+                top:750px;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                margin: auto;
+                text-align: center;
+            }
+            th{
+                padding-left: 20px;
+                padding-right: 20px;
+            }
+            td{
+                border: 2px solid black !important;
+                text-align: center;
+            }
+        </style>
+        <!-- <link rel="stylesheet" href="./style.css"> -->
+    </head>
+    <body>
+        <div class="login-form">
+            <h2 style="text-align: center;" >Registration Form</h2>
+            <form id="register" method="post">
+                <label>Name : </label>
+                <input type="text" name="frame" id="name" class="textbox" placeholder="Enter Full Name" required>
+                <br>
+                <label>Email : </label>
+                <input type="email" name="email" id="email" class="textbox" placeholder="Enter Email" required>
+                <br>
+                <label>Password :</label>
+                <input type="password" name="password" id="password" class="textbox" placeholder="Enter Passwoed" required>
+                <br>
+                <label>date of Birth : </label>
+                <input type="date" name="dob" id="dob"  required>
+                <br>
+                <input type="checkbox" name="terms" id="terms" >
+                <label>Accept Terms & Conditions</label>
+                <br>
+                <input type="submit" id="submit" name="submit" value="Submit">
+            </form>
+        </div>
+        <div class="showData" >
+            <div id="hello">Entries
+                <div id="entries">
+                    
+                </div>
+            </div>
+        </div>
+        <script>
+            let date_picker = document.getElementById('dob');
+            let now = new Date();
+            let day = now.getDate().toString().padStart(2, '0');
+            let month = (now.getMonth() + 1).toString().padStart(2, '0');
+            let year = now.getFullYear();
+            date_picker.min = (year - 55) + "-" + month + "-" + day;
+            date_picker.max = (year - 18) + "-" + month + "-" + day;
+            const retriveEntries = () => {
+                let entries = localStorage.getItem("user-entries");
+                if (entries) {
+                    entries = JSON.parse(entries);
+                }
+                else {
+                    entries = [];
+                }
+                return entries;
+            }
+            let userForm = document.getElementById("register");
+            let userEntries = retriveEntries();
+            const displayEntries = () => {
+                const entries = retriveEntries();
+                const tableEntries = entries.map(entry => {
+                    const nameCell = `<td class='border px-4 py-2'>${entry.name}</td>`;
+                    const emailCell = `<td class='border px-4 py-2'>${entry.email}</td>`;
+                    const passwordCell = `<td class='border px-4 py-2'>${entry.password}</td>`;
+                    const dobCell = `<td class='border px-4 py-2'>${entry.dob}</td>`;
+                    const acceptTermsCell = `<td class='border px-4 py-2'>${entry.acceptedTermsAndconditions}</td>`;
+                    const row = `<tr> ${nameCell} ${emailCell} ${passwordCell} ${dobCell} ${acceptTermsCell} </tr>`;
+                    return row;
+                }).join('\n');
+                const table = `
+                    <table class="table-auto w-full">
+                        <tr>
+                            <th class="px-4 py-2">Name</th>
+                            <th class="px-4 py-2">Email</th>
+                            <th class="px-4 py-2">Password</th>
+                            <th class="px-4 py-2">Dob</th>
+                            <th class="px-4 py-2">Accepted terms?</th>
+                        </tr>
+                        ${tableEntries}
+                    </table>`;
+                let details = document.getElementById('entries');
+                details.innerHTML = table;
+            }
+            const saveUserForm = (event) => {
+                event.preventDefault();
+                const name = document.getElementById("name").value;
+                const email = document.getElementById("email").value;
+                const password = document.getElementById("password").value;
+                const dob = document.getElementById("dob").value;
+                const acceptedTermsAndconditions = document.getElementById("terms").checked;
+                const entry = {
+                    name,
+                    email,
+                    password,
+                    dob,
+                    acceptedTermsAndconditions
+                };
+                userEntries.push(entry);
+                localStorage.setItem("user-entries", JSON.stringify(userEntries));
+                displayEntries();
+            }
+            userForm.addEventListener("submit", saveUserForm);
+            displayEntries();
+        </script>
+    </body>
+</html>
