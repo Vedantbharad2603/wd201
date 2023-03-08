@@ -6,19 +6,19 @@ const todoList = () => {
     const markAsComplete = (index) => {
         all[index].completed = true
     }
-    let todayDate = new Date().toISOString().split("T")[0]; // add today date
+    let today = new Date().toISOString().split("T")[0];
     const overdue = () => {
-        return all.filter((todoItem) => todoItem.dueDate < todayDate); //
+        return all.filter((todoItem) => todoItem.dueDate < today);
     }
     const dueToday = () => {
-        return all.filter((todoItem) => todoItem.dueDate == todayDate);
+        return all.filter((todoItem) => todoItem.dueDate == today);
     }
     const dueLater = () => {
-        return all.filter((todoItem) => todoItem.dueDate > todayDate);
+        return all.filter((todoItem) => todoItem.dueDate > today);
     }
     const toDisplayableList = (list) => {
         let formatted = list.map((todoItem) => {
-            if (todoItem.dueDate == todayDate) {
+            if (todoItem.dueDate == today) {
                 return "[" + (todoItem.completed ? "x" : " ") + "] " + todoItem.title;
             }
             return "[" + (todoItem.completed ? "x" : " ") + "] " + todoItem.title + " " + todoItem.dueDate;
@@ -48,7 +48,7 @@ const formattedDate = d => {
 }
 
 var dateToday = new Date()
-const todayDate = formattedDate(dateToday)
+const today = formattedDate(dateToday)
 const yesterday = formattedDate(
     new Date(new Date().setDate(dateToday.getDate() - 1))
 )
@@ -57,8 +57,8 @@ const tomorrow = formattedDate(
 )
 
 todos.add({ title: 'Submit assignment', dueDate: yesterday, completed: false })
-todos.add({ title: 'Pay rent', dueDate: todayDate, completed: true })
-todos.add({ title: 'Service Vehicle', dueDate: todayDate, completed: false })
+todos.add({ title: 'Pay rent', dueDate: today, completed: true })
+todos.add({ title: 'Service Vehicle', dueDate: today, completed: false })
 todos.add({ title: 'File taxes', dueDate: tomorrow, completed: false })
 todos.add({ title: 'Pay electric bill', dueDate: tomorrow, completed: false })
 
@@ -70,7 +70,7 @@ var formattedOverdues = todos.toDisplayableList(overdues)
 console.log(formattedOverdues)
 console.log("\n")
 
-console.log("Due todayDate")
+console.log("Due Today")
 let itemsDueToday = todos.dueToday()
 let formattedItemsDueToday = todos.toDisplayableList(itemsDueToday)
 console.log(formattedItemsDueToday)
